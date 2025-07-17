@@ -3,23 +3,22 @@ const http = require("http")
 const socketIo = require("socket.io")
 const dotenv = require("dotenv")
 const connectDB = require("./config/database")
-const bot = require("./bot")
+const bot = require("./bot") // Telegram bot kodlari shu faylda bo'lishi kerak
 const { verifyToken } = require("./utils/auth")
 
 dotenv.config()
 
-// Initialize Express and Socket.IO
+// Express va Socket.IO
 const app = express()
 const server = http.createServer(app)
 const io = socketIo(server, { cors: { origin: "*" } })
 
-// Middleware
 app.use(express.json())
 
-// Connect to MongoDB
+// MongoDB bilan ulanish
 connectDB()
 
-// Socket.IO: Real-time Chat
+// Socket.IO ulanishlari
 io.on("connection", (socket) => {
   console.log("Socket connected:", socket.id)
 
@@ -32,10 +31,15 @@ io.on("connection", (socket) => {
   })
 })
 
-// Make io available globally
+// Socketni global qilish
 global.io = io
 
-// Express API for Notifications
+// Test route — ishlayotganini tekshirish uchun
+app.get("/", (req, res) => {
+  res.send("✅ Bot ishlayapti - Fly.io");
+})
+
+// Telegram bildirishnomasi uchun route
 app.get("/notifications", (req, res) => {
   const token = req.headers.authorization?.split(" ")[1]
   const decoded = verifyToken(token)
@@ -52,7 +56,7 @@ app.get("/notifications", (req, res) => {
   res.json({ message: "Notification sent" })
 })
 
-// Error Handling
+// Errorlar
 process.on("unhandledRejection", (err) => {
   console.error("Unhandled Promise Rejection:", err)
 })
@@ -62,11 +66,9 @@ process.on("uncaughtException", (err) => {
   process.exit(1)
 })
 
-// Start Server
-const PORT = process.env.PORT || 3002
-server.listen(PORT, () => {
+// Serverni ishga tushirish — MUHIM: 0.0.0.0
+const PORT = process.env.PORT || 8300
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`)
-  
   console.log(`🤖 Telegram bot is active`)
 })
-
