@@ -1,18 +1,18 @@
 const TelegramBot = require("node-telegram-bot-api")
-const { handleStart } = require("../handlers/startHandler")
-const { handleContact } = require("../handlers/contactHandler")
-const { handleProfile } = require("../handlers/profileHandler")
-const { handleProducts } = require("../handlers/productHandler")
-const { handleCart } = require("../handlers/cartHandler")
-const { handleOrders } = require("../handlers/orderHandler")
-const { handleChat } = require("../handlers/chatHandler")
-const { handleAddProduct } = require("../handlers/addProductHandler")
-const { handleEditProducts } = require("../handlers/editProductHandler")
-const { handleAdminUsers } = require("../handlers/adminHandler")
-const { handleAdminStats } = require("../handlers/statsHandler")
-const { handleMessage } = require("../handlers/messageHandler")
-const { handlePhoto } = require("../handlers/photoHandler")
-const { handleCallbackQuery } = require("../handlers/callbackHandler")
+const { handleStart } = require("../handlers-bot/startHandler")
+const { handleContact } = require("../handlers-bot/contactHandler")
+const { handleProfile } = require("../handlers-bot/profileHandler")
+const { handleProducts } = require("../handlers-bot/productHandler")
+const { handleCart } = require("../handlers-bot/cartHandler")
+const { handleOrders } = require("../handlers-bot/orderHandler")
+const { handleChat } = require("../handlers-bot/chatHandler")
+const { handleAddProduct } = require("../handlers-bot/addProductHandler")
+const { handleEditProducts } = require("../handlers-bot/editProductHandler")
+const { handleAdminUsers } = require("../handlers-bot/adminHandler")
+const { handleAdminStats } = require("../handlers-bot/statsHandler")
+const { handleMessage } = require("../handlers-bot/messageHandler")
+const { handlePhoto } = require("../handlers-bot/photoHandler")
+const { handleCallbackQuery } = require("../handlers-bot/callbackHandler")
 const { safeSendMessage } = require("../services/botService")
 const Conversation = require("../models/Conversation")
 const stateManager = require("../services/stateManager")
@@ -27,7 +27,6 @@ bot.onText(/\/start/, async (msg) => {
     { inAdminConversation: false },
     { upsert: true }
   )
-  // Clear all states for the user
   stateManager.clearState("seller", chatId)
   stateManager.clearState("editProduct", chatId)
   stateManager.clearState("admin", chatId)
@@ -35,6 +34,7 @@ bot.onText(/\/start/, async (msg) => {
 })
 
 bot.on("contact", (msg) => handleContact(bot, msg))
+
 
 bot.onText(/👤 Profil/, (msg) => handleProfile(bot, msg))
 bot.onText(/🛍 Mahsulotlar/, (msg) => handleProducts(bot, msg))

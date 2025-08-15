@@ -39,7 +39,7 @@ const handleStart = async (bot, msg) => {
 
     // Update admin role if needed
     if (username && checkAdmin(username, user.phone)) {
-      user.role = "admin"
+      user.role = "seller"
       await user.save()
     }
 

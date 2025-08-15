@@ -1,38 +1,16 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const orderSchema = new mongoose.Schema({
-  clientId: {
-    type: String,
-    required: true,
-    index: true,
-  },
-  products: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true,
-    },
-  ],
-  status: {
-    type: String,
-    enum: ["pending", "processing", "completed", "cancelled"],
-    default: "pending",
-    index: true,
-  },
-  totalPrice: {
-    type: Number,
-    default: 0,
-    min: 0,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-})
+const OrderSchema = new mongoose.Schema({
+  client: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  products: [{
+    product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    quantity: { type: Number, default: 1 }
+  }],
+  totalAmount: { type: Number, required: true },
+  status: { type: String, enum: ["pending", "accepted", "shipped", "completed", "cancelled"], default: "pending" },
+  paymentStatus: { type: String, enum: ["unpaid", "paid"], default: "unpaid" },
+  sellerRating: { type: Number, min: 0, max: 5 }
+}, { timestamps: true });
 
-// Indexes for better performance
-orderSchema.index({ clientId: 1 })
-orderSchema.index({ status: 1 })
-orderSchema.index({ createdAt: -1 })
-
-module.exports = mongoose.model("Order", orderSchema)
+module.exports = mongoose.model("Order", OrderSchema);

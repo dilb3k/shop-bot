@@ -1,6 +1,6 @@
 const ADMINS = [
   {
-    username: "dilbek7011",
+    username: "dilbek7",
     phones: ["+998887060903", "998887060903", "887060903"],
   },
 ]

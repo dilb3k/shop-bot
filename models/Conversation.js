@@ -1,25 +1,8 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const conversationSchema = new mongoose.Schema({
-  chatId: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true,
-  },
-  inAdminConversation: {
-    type: Boolean,
-    default: false,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-})
+const ConversationSchema = new mongoose.Schema({
+  participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  isGroup: { type: Boolean, default: false }
+}, { timestamps: true });
 
-conversationSchema.pre("save", function(next) {
-  this.updatedAt = Date.now()
-  next()
-})
-
-module.exports = mongoose.model("Conversation", conversationSchema)
+module.exports = mongoose.model("Conversation", ConversationSchema);
